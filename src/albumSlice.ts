@@ -33,11 +33,11 @@ const albumSlice = createSlice({
   reducers: {
     setAlbum(state, action: PayloadAction<albumType[]>) {
       state.albumList = [...state.albumList, ...action.payload];
-
       state.loading = false;
     },
     setModifyItem(state, action: PayloadAction<modifyItemType>) {
       state.modifyItem = action.payload;
+      state.isModified = false;
     },
     updateAlbum(state, action: PayloadAction<modifyItemType>) {
       state.albumList = state.albumList.map((item) =>
@@ -48,12 +48,9 @@ const albumSlice = createSlice({
       state.modifyItem = { id: -1, title: "" };
       state.isModified = false;
     },
-    forceRerender(state) {
-      state.isModified = true;
-    },
+  
     resetAlbum(state) {
-      state.modifyItem = { id: -1, title: "" };
-      state.isModified = false;
+      state.isModified=true;
     },
   },
 });
@@ -63,7 +60,6 @@ export const {
   setModifyItem,
   updateAlbum,
   resetAlbum,
-  forceRerender,
 } = albumSlice.actions;
 const albumReducer = albumSlice.reducer;
 export default albumReducer;

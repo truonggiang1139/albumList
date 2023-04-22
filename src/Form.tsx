@@ -22,11 +22,18 @@ export default function Form() {
     dispatch(resetAlbum());
   };
 
+  const check=(id:number)=>{
+    if (modifyItem.id===id && isModify===true){
+      return true;
+    }
+    return false
+
+  }
   const getPhotos = () => {
     setTimeout(async () => {
       const res = await axios.get(
         `https://jsonplaceholder.typicode.com/photos?&_start=${page}&_end=${
-          page + 4
+          page + 6
         }`
       );
 
@@ -48,7 +55,7 @@ export default function Form() {
           Update
         </button>
         <button
-          disabled={modifyItem.id === -1}
+          disabled={modifyItem.id===-1}
           onClick={handleResetList}
           className="hover:cursor-pointer rounded px-3 mr-3 bg-blue-500 text-white cursor-default disabled:bg-gray-600 disabled:hover:cursor-auto"
         >
@@ -74,7 +81,7 @@ export default function Form() {
                 title={item.title}
                 id={item.id}
                 thumbnailUrl={item.thumbnailUrl}
-                isModified={isModify}
+                isModified={check(item.id)}
               ></AlbumItem>
             );
           })}
