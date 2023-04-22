@@ -1,14 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type albumType = {
-  albumID: Number;
-  id: Number;
+  albumID: number;
+  id: number;
   title: string;
   url: string;
   thumbnailUrl: string;
 };
 type modifyItemType = {
-  id: Number;
+  id: number;
   title: string;
 };
 export type albumSliceType = {
@@ -22,7 +22,7 @@ const initialState: albumSliceType = {
   albumList: [],
   isModified: false,
   modifyItem: {
-    id: 0,
+    id: -1,
     title: "",
   },
   loading: true,
@@ -32,12 +32,12 @@ const albumSlice = createSlice({
   initialState,
   reducers: {
     setAlbum(state, action: PayloadAction<albumType[]>) {
-      state.albumList = action.payload;
+      state.albumList = [...state.albumList, ...action.payload];
+
       state.loading = false;
     },
     setModifyItem(state, action: PayloadAction<modifyItemType>) {
       state.modifyItem = action.payload;
-      state.isModified = true;
     },
     updateAlbum(state, action: PayloadAction<modifyItemType>) {
       state.albumList = state.albumList.map((item) =>
@@ -45,12 +45,25 @@ const albumSlice = createSlice({
           ? { ...item, title: action.payload.title }
           : item
       );
+      state.modifyItem = { id: -1, title: "" };
       state.isModified = false;
-      state.modifyItem = { id: 0, title: "" };
+    },
+    forceRerender(state) {
+      state.isModified = true;
+    },
+    resetAlbum(state) {
+      state.modifyItem = { id: -1, title: "" };
+      state.isModified = false;
     },
   },
 });
 
-export const { setAlbum, setModifyItem, updateAlbum } = albumSlice.actions;
+export const {
+  setAlbum,
+  setModifyItem,
+  updateAlbum,
+  resetAlbum,
+  forceRerender,
+} = albumSlice.actions;
 const albumReducer = albumSlice.reducer;
 export default albumReducer;
